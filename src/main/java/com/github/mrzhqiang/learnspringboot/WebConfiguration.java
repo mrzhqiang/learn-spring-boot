@@ -7,6 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.catalina.filters.RemoteIpFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -14,6 +17,22 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class WebConfiguration {
+  @Bean
+  public RemoteIpFilter remoteIpFilter() {
+    return new RemoteIpFilter();
+  }
+
+  @Bean
+  public FilterRegistrationBean<MyFilter> testFilterRegistration() {
+    FilterRegistrationBean<MyFilter> bean = new FilterRegistrationBean<>();
+    bean.setFilter(new MyFilter());
+    bean.addUrlPatterns("/*");
+    bean.addInitParameter("paramName", "paramValue");
+    bean.setName("MyFilter");
+    bean.setOrder(1);
+    return bean;
+  }
+
   public static class MyFilter implements Filter {
 
     @Override
